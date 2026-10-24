@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------- */
+/* Design tokens — sourced from AppColors Documentation (official spec)   */
+/* Gradient endpoints were re-checked against the actual exported screens */
+/* (every CTA button/avatar there renders teal -> darkBlue, not teal ->   */
+/* #4CA1AF), so gradient-primary follows what's visually on the screens.  */
+/* ---------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+
+  /* Brand solids */
+  --color-navy: #242254;       /* darkBlue / textPrimary */
+  --color-teal: #67a1a9;       /* teal / textSecondary */
+  --color-orange: #ee814d;     /* orange */
+  --color-teal-deep: #4ca1af;  /* second stop of primaryGradient/gradientOfScreen */
+
+  /* Surfaces */
+  --color-app-bg: #b9dbfa;     /* mainColor */
+  --color-card: #e9f2fa;       /* cardBackground */
+  --color-auth-card: #ffffff;  /* authFormBackground */
+
+  /* Text */
+  --color-text-hint: #94a3b8;  /* textHint */
+
+  /* Status */
+  --color-status-green: #16a34a;
+  --color-status-green-bg: #d7f5ea;
+  --color-status-red: #ef4444;        /* errorRed */
+  --color-status-red-bg: #fee2e2;
+  --color-status-orange: #ee814d;
+  --color-status-orange-bg: #ffe4d9;
+  --color-status-blue: #2563eb;
+  --color-status-blue-bg: #dde9f5;
+  --color-status-purple: #9333ea;
+  --color-status-purple-bg: #f3e8ff;
+  --color-status-gray: #64748b;
+  --color-status-gray-bg: #e5edf0;
+}
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+    overflow-x: hidden;
+    max-width: 100vw;
+    min-width: 0;
+  }
+  body {
+    @apply bg-app-bg text-navy antialiased;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  /* Used for every solid CTA button and avatar/icon badge across the screens */
+  .gradient-primary {
+    background-image: linear-gradient(135deg, var(--color-teal) 0%, var(--color-navy) 100%);
+  }
+  /* Reserved accent gradient (teal -> teal-deep), kept for future secondary use */
+  .gradient-accent {
+    background-image: linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-deep) 100%);
+  }
+  .gradient-text {
+    background-image: linear-gradient(135deg, var(--color-teal) 0%, var(--color-navy) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(36, 34, 84, 0.25);
+    border-radius: 9999px;
+  }
+}
