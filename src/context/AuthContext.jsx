@@ -5,7 +5,7 @@ const AuthContext = createContext(null);
 // ── يوزر وهمي بصلاحيات أدمن عشان نفتح بيه لوحة التحكم ──
 const MOCK_USER = {
   id: 'mock-admin-123',
-  name: 'Admin (Static)',
+  name: 'مدير النظام',
   email: 'admin@maktabti.com',
   role: 'superAdmin',
   rawRole: 'admin',

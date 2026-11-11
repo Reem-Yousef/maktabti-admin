@@ -62,10 +62,12 @@ export default function ChangePassword() {
                 value={form.current}
                 onChange={(e) => setForm({ ...form, current: e.target.value })}
                 placeholder="كلمة المرور المؤقتة من البريد"
-                className="w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 pr-10 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
+                // {/* التعديل الأول: استبدال pr-10 بـ pe-10 */}
+                className="w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 pe-10 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
               />
+              {/* التعديل الثاني: استبدال right-3 بـ end-3 */}
               <button type="button" onClick={() => setShowCurrent((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/40 hover:text-navy/70">
+                className="absolute end-3 top-1/2 -translate-y-1/2 text-navy/40 hover:text-navy/70">
                 {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -81,10 +83,12 @@ export default function ChangePassword() {
                 value={form.next}
                 onChange={(e) => setForm({ ...form, next: e.target.value })}
                 placeholder="6 أحرف على الأقل"
-                className="w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 pr-10 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
+                // {/* التعديل الثالث: استبدال pr-10 بـ pe-10 */}
+                className="w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 pe-10 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
               />
+              {/* التعديل الرابع: استبدال right-3 بـ end-3 */}
               <button type="button" onClick={() => setShowNext((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/40 hover:text-navy/70">
+                className="absolute end-3 top-1/2 -translate-y-1/2 text-navy/40 hover:text-navy/70">
                 {showNext ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>

@@ -81,23 +81,23 @@ export default function Categories() {
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm('حذف هذا القسم؟')) return;
+    if (!window.confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
     setCats(cats.filter(c => c._id !== id));
   };
 
   return (
-    <div>
+    <div className="p-4 sm:p-6 lg:p-8 w-full">
       <Topbar
-        title="Categories"
+        title="الأقسام"
         action={
           <button onClick={openAdd}
-            className="gradient-primary flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-md shadow-navy/20">
-            <Plus size={16} /> Add Category
+            className="gradient-primary flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity hover:opacity-90">
+            <Plus size={16} /> إضافة قسم
           </button>
         }
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cats.map((cat) => (
           <div key={cat._id} className="rounded-2xl bg-card p-5 shadow-sm shadow-navy/5">
             <div className="flex items-start justify-between gap-2">
@@ -112,16 +112,16 @@ export default function Categories() {
                 )}
                 <div>
                   <h3 className="text-sm font-bold text-navy">{cat.name}</h3>
-                  <p className="text-xs text-navy/40">{cat.booksCount ?? 0} books</p>
+                  <p className="text-xs text-navy/40">{cat.booksCount ?? 0} كتاب</p>
                 </div>
               </div>
               <div className="flex gap-1.5 shrink-0">
                 <button onClick={() => openEdit(cat)}
-                  className="rounded-lg bg-status-green-bg p-1.5 text-status-green">
+                  className="rounded-lg bg-status-green-bg p-1.5 text-status-green transition-colors hover:bg-status-green hover:text-white">
                   <Pencil size={14} />
                 </button>
                 <button onClick={() => handleDelete(cat._id)}
-                  className="rounded-lg bg-status-red-bg p-1.5 text-status-red">
+                  className="rounded-lg bg-status-red-bg p-1.5 text-status-red transition-colors hover:bg-status-red hover:text-white">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -141,31 +141,41 @@ export default function Categories() {
       <Modal
         open={!!modal}
         onClose={() => setModal(null)}
-        title={modal?.mode === 'add' ? 'Add Category' : 'Edit Category'}
+        title={modal?.mode === 'add' ? 'إضافة قسم جديد' : 'تعديل القسم'}
       >
-        <div className="space-y-3">
-          <Field label="Name *" value={draft.name}
+        <div className="space-y-4">
+          <Field 
+            label="اسم القسم *" 
+            value={draft.name}
             error={fieldErrors.name}
-            onChange={(e) => updateDraft('name', e.target.value)} />
+            onChange={(e) => updateDraft('name', e.target.value)} 
+          />
+          
           <div>
-            <label className="text-xs font-semibold text-navy/70">Description *</label>
+            <label className="text-xs font-semibold text-navy/70">الوصف *</label>
             <textarea value={draft.description} rows={3}
               onChange={(e) => updateDraft('description', e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2 text-sm text-navy outline-none focus:border-teal" />
+              className={`mt-1.5 w-full rounded-lg border px-3 py-2 text-sm text-navy outline-none transition-colors
+                ${fieldErrors.description ? 'border-status-red bg-status-red-bg' : 'border-navy/10 bg-card focus:border-teal'}`} 
+            />
             {fieldErrors.description && (
-              <p className="mt-2 text-[11px] text-status-red">{fieldErrors.description}</p>
+              <p className="mt-1 text-xs text-status-red">{fieldErrors.description}</p>
             )}
           </div>
-          <Field label="Icon URL (optional)" value={draft.iconUrl}
-            onChange={(e) => updateDraft('iconUrl', e.target.value)} />
+          
+          <Field 
+            label="رابط الأيقونة (اختياري)" 
+            value={draft.iconUrl}
+            onChange={(e) => updateDraft('iconUrl', e.target.value)} 
+          />
 
           {saveError && (
             <p className="rounded-lg bg-status-red-bg px-3 py-2 text-xs text-status-red">{saveError}</p>
           )}
 
           <button onClick={handleSave} disabled={saving}
-            className="gradient-primary w-full rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 disabled:opacity-60">
-            {saving ? 'Saving…' : modal?.mode === 'add' ? 'Save Category' : 'Update Category'}
+            className="gradient-primary w-full rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity disabled:opacity-60">
+            {saving ? 'جاري الحفظ...' : modal?.mode === 'add' ? 'حفظ القسم' : 'تحديث القسم'}
           </button>
         </div>
       </Modal>
@@ -173,11 +183,17 @@ export default function Categories() {
   );
 }
 
-function Field({ label, ...props }) {
+function Field({ label, error, ...props }) {
   return (
     <div>
       <label className="text-xs font-semibold text-navy/70">{label}</label>
-      <input {...props} className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2 text-sm text-navy outline-none focus:border-teal" />
+      <input {...props} 
+        className={`mt-1.5 w-full rounded-lg border px-3 py-2 text-sm text-navy outline-none transition-colors
+          ${error ? 'border-status-red bg-status-red-bg' : 'border-navy/10 bg-card focus:border-teal'}`} 
+      />
+      {error && (
+        <p className="mt-1 text-xs text-status-red">{error}</p>
+      )}
     </div>
   );
 }

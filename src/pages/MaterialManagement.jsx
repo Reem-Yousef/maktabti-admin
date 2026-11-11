@@ -54,12 +54,11 @@ const EMPTY_DRAFT = {
 const EMPTY_FILES = { coverImage: null, bookPdf: null };
 
 export default function MaterialManagement() {
-  // استبدال الـ API ببيانات محلية
   const [books, setBooks] = useState(INITIAL_BOOKS);
   const categories = MOCK_CATEGORIES;
 
   const [search, setSearch] = useState('');
-  const [catFilter, setCatFilter] = useState('All');
+  const [catFilter, setCatFilter] = useState('الكل');
 
   const [modal, setModal] = useState(null);
   const [draft, setDraft] = useState(EMPTY_DRAFT);
@@ -74,7 +73,7 @@ export default function MaterialManagement() {
         b.title?.toLowerCase().includes(search.toLowerCase()) ||
         b.author?.toLowerCase().includes(search.toLowerCase());
       const matchCat =
-        catFilter === 'All' ||
+        catFilter === 'الكل' ||
         b.category?._id === catFilter ||
         b.category?.name === catFilter;
       return matchSearch && matchCat;
@@ -126,7 +125,6 @@ export default function MaterialManagement() {
     setSaving(true);
     setSaveError('');
 
-    // محاكاة سرعة السيرفر الوهمية
     setTimeout(() => {
       const selectedCat = categories.find(c => c.name === draft.categoryName) || { _id: 'custom', name: draft.categoryName };
       
@@ -155,75 +153,78 @@ export default function MaterialManagement() {
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm('حذف هذا الكتاب؟')) return;
+    if (!window.confirm('هل أنت متأكد من حذف هذا الكتاب؟')) return;
     setBooks(books.filter(b => b._id !== id));
   };
 
   return (
-    <div>
+    // التعديل: مسافات الصفحة
+    <div className="p-4 sm:p-6 lg:p-8 w-full">
       <Topbar
-        title="Material Management"
+        title="إدارة المواد العلمية"
         action={
           <button onClick={openAdd}
-            className="gradient-primary flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-md shadow-navy/20">
-            <Plus size={16} /> Add New Material
+            className="gradient-primary flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity hover:opacity-90">
+            <Plus size={16} /> إضافة مادة جديدة
           </button>
         }
       />
 
-      <div className="rounded-2xl bg-card p-5 shadow-sm shadow-navy/5">
+      <div className="mt-6 rounded-2xl bg-card p-5 shadow-sm shadow-navy/5">
         {/* Filters */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input value={search} onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by title or author…"
-            className="min-w-[240px] flex-1 rounded-lg border border-navy/10 bg-auth-card px-3 py-2 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal" />
+            placeholder="البحث بالعنوان أو اسم المؤلف..."
+            className="min-w-[240px] flex-1 rounded-lg border border-navy/10 bg-app-bg px-4 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none transition-colors focus:border-teal" />
           <select value={catFilter} onChange={(e) => setCatFilter(e.target.value)}
-            className="rounded-lg border border-navy/10 bg-auth-card px-3 py-2 text-sm text-navy/70 outline-none">
-            <option value="All">All Categories</option>
+            className="rounded-lg border border-navy/10 bg-app-bg px-4 py-2.5 text-sm text-navy/70 outline-none transition-colors focus:border-teal appearance-none cursor-pointer">
+            <option value="الكل">كل الأقسام</option>
             {categories.map((c) => <option key={c._id} value={c.name}>{c.name}</option>)}
           </select>
         </div>
 
         {/* Table */}
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-left text-sm">
+        <div className="mt-5 overflow-x-auto">
+          {/* التعديل: text-start و whitespace-nowrap */}
+          <table className="w-full text-start text-sm whitespace-nowrap">
             <thead>
-              <tr className="text-xs font-bold tracking-wide text-navy/40">
-                <th className="py-2 pr-4">Title</th>
-                <th className="py-2 pr-4">Author</th>
-                <th className="py-2 pr-4">Category</th>
-                <th className="py-2 pr-4">Copies</th>
-                <th className="py-2 pr-4">Status</th>
-                <th className="py-2 pr-4">Rating</th>
-                <th className="py-2 pr-4">Actions</th>
+              <tr className="text-xs font-bold tracking-wide text-navy/40 border-b border-navy/5">
+                {/* التعديل: pe-4 بدل pr-4 */}
+                <th className="py-3 pe-4 pb-3">العنوان</th>
+                <th className="py-3 pe-4 pb-3">المؤلف</th>
+                <th className="py-3 pe-4 pb-3">القسم</th>
+                <th className="py-3 pe-4 pb-3">النسخ</th>
+                <th className="py-3 pe-4 pb-3">الحالة</th>
+                <th className="py-3 pe-4 pb-3">التقييم</th>
+                <th className="py-3 pe-4 pb-3">إجراءات</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-navy/5">
               {filtered.map((b) => (
-                <tr key={b._id}>
-                  <td className="py-3 pr-4 font-semibold text-navy">{b.title}</td>
-                  <td className="py-3 pr-4 text-navy/60">{b.author}</td>
-                  <td className="py-3 pr-4">
-                    <StatusBadge tone="green">{b.category?.name ?? '—'}</StatusBadge>
+                <tr key={b._id} className="transition-colors hover:bg-navy/5">
+                  <td className="py-3.5 pe-4 font-semibold text-navy">{b.title}</td>
+                  <td className="py-3.5 pe-4 text-navy/60">{b.author}</td>
+                  <td className="py-3.5 pe-4">
+                    <StatusBadge tone="blue">{b.category?.name ?? '—'}</StatusBadge>
                   </td>
-                  <td className="py-3 pr-4 text-navy/70">{b.availableCopies}/{b.totalCopies}</td>
-                  <td className="py-3 pr-4">
+                  <td className="py-3.5 pe-4 font-medium text-navy/70">{b.availableCopies} / {b.totalCopies}</td>
+                  <td className="py-3.5 pe-4">
                     <StatusBadge tone={b.availabilityStatus === 'متوفر' ? 'green' : 'red'}>
                       {b.availabilityStatus}
                     </StatusBadge>
                   </td>
-                  <td className="py-3 pr-4 text-navy/60">⭐ {b.rating ?? 0}</td>
-                  <td className="py-3 pr-4">
+                  <td className="py-3.5 pe-4 font-medium text-navy/60">⭐ {b.rating ?? 0}</td>
+                  <td className="py-3.5 pe-4">
                     <div className="flex items-center gap-2">
-                      <IconBtn tone="blue"  icon={Eye}    title="View"   onClick={() => setViewBook(b)} />
-                      <IconBtn tone="green" icon={Pencil} title="Edit"   onClick={() => openEdit(b)} />
-                      <IconBtn tone="red"   icon={Trash2} title="Delete" onClick={() => handleDelete(b._id)} />
+                      <IconBtn tone="blue"  icon={Eye}    title="عرض التفاصيل"  onClick={() => setViewBook(b)} />
+                      <IconBtn tone="green" icon={Pencil} title="تعديل"  onClick={() => openEdit(b)} />
+                      <IconBtn tone="red"   icon={Trash2} title="حذف" onClick={() => handleDelete(b._id)} />
                     </div>
                   </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan={7} className="py-8 text-center text-sm text-navy/40">No materials found.</td></tr>
+                <tr><td colSpan={7} className="py-12 text-center text-sm text-navy/40">لا توجد مواد مطابقة للبحث.</td></tr>
               )}
             </tbody>
           </table>
@@ -234,107 +235,123 @@ export default function MaterialManagement() {
       <Modal
         open={!!modal}
         onClose={() => setModal(null)}
-        title={modal?.mode === 'add' ? 'Add New Material' : 'Edit Material'}
-        widthClass="max-w-lg"
+        title={modal?.mode === 'add' ? 'إضافة مادة جديدة' : 'تعديل بيانات المادة'}
+        widthClass="max-w-xl"
       >
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <Field label="Title *"  value={draft.title}
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <Field label="عنوان الكتاب *"  value={draft.title}
               onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
-            <Field label="Author *" value={draft.author}
+            <Field label="المؤلف *" value={draft.author}
               onChange={(e) => setDraft({ ...draft, author: e.target.value })} />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-navy/70">Category *</label>
+            <label className="text-xs font-semibold text-navy/70">القسم *</label>
             <select
               value={draft.categoryName}
               onChange={(e) => setDraft({ ...draft, categoryName: e.target.value })}
-              className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2 text-sm text-navy outline-none">
-              <option value="">— اختر قسم —</option>
+              className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy outline-none transition-colors focus:border-teal appearance-none cursor-pointer">
+              <option value="">— اختر القسم —</option>
               {categories.map((c) => (
                 <option key={c._id} value={c.name}>{c.name}</option>
               ))}
             </select>
           </div>
 
-          <Field label="Description" value={draft.description}
-            onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
+          <div>
+             <label className="text-xs font-semibold text-navy/70">الوصف *</label>
+             <textarea value={draft.description} rows={2}
+               onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+               className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2 text-sm text-navy outline-none transition-colors focus:border-teal" 
+             />
+          </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="text-xs font-semibold text-navy/70">Availability</label>
+              <label className="text-xs font-semibold text-navy/70">حالة التوفر</label>
               <select value={draft.availabilityStatus}
                 onChange={(e) => setDraft({ ...draft, availabilityStatus: e.target.value })}
-                className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2 text-sm text-navy outline-none">
-                {AVAILABILITY.map((a) => <option key={a}>{a}</option>)}
+                className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy outline-none transition-colors focus:border-teal appearance-none cursor-pointer">
+                {AVAILABILITY.map((a) => <option key={a} value={a}>{a}</option>)}
               </select>
             </div>
-            <Field label="Pub. Year" type="number"
+            <Field label="سنة النشر" type="number"
               value={draft.publicationYear}
               onChange={(e) => setDraft({ ...draft, publicationYear: +e.target.value })} />
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            <Field label="Total Copies" type="number" min="1"
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <Field label="إجمالي النسخ" type="number" min="1"
               value={draft.totalCopies}
               onChange={(e) => setDraft({ ...draft, totalCopies: +e.target.value })} />
-            <Field label="Available" type="number" min="0"
+            <Field label="النسخ المتاحة" type="number" min="0"
               value={draft.availableCopies}
               onChange={(e) => setDraft({ ...draft, availableCopies: +e.target.value })} />
-            <Field label="Rating (0–5)" type="number" min="0" max="5" step="0.1"
+            <Field label="التقييم (0–5)" type="number" min="0" max="5" step="0.1"
               value={draft.rating}
               onChange={(e) => setDraft({ ...draft, rating: +e.target.value })} />
           </div>
 
           {/* File Uploads */}
-          <FileInput
-            label="Book PDF *"
-            accept=".pdf"
-            file={files.bookPdf}
-            onChange={(f) => setFiles({ ...files, bookPdf: f })}
-            hint={modal?.mode === 'edit' ? 'اتركه فاضي للإبقاء على الملف الحالي' : ''}
-          />
-          <FileInput
-            label="Cover Image"
-            accept="image/png,image/jpeg,image/webp"
-            file={files.coverImage}
-            onChange={(f) => setFiles({ ...files, coverImage: f })}
-            hint={modal?.mode === 'edit' ? 'اتركه فاضي للإبقاء على الصورة الحالية' : ''}
-          />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FileInput
+              label="ملف الكتاب (PDF) *"
+              accept=".pdf"
+              file={files.bookPdf}
+              onChange={(f) => setFiles({ ...files, bookPdf: f })}
+              hint={modal?.mode === 'edit' ? 'اتركه فارغاً للإبقاء على الملف الحالي' : ''}
+            />
+            <FileInput
+              label="صورة الغلاف (اختياري)"
+              accept="image/png,image/jpeg,image/webp"
+              file={files.coverImage}
+              onChange={(f) => setFiles({ ...files, coverImage: f })}
+              hint={modal?.mode === 'edit' ? 'اتركه فارغاً للإبقاء على الصورة الحالية' : ''}
+            />
+          </div>
 
           {saveError && (
-            <p className="rounded-lg bg-status-red-bg px-3 py-2 text-xs text-status-red">{saveError}</p>
+            <p className="mt-2 rounded-lg bg-status-red-bg px-3 py-2 text-xs font-medium text-status-red">{saveError}</p>
           )}
 
           <button onClick={handleSave} disabled={saving}
-            className="gradient-primary w-full rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 disabled:opacity-60">
-            {saving ? 'Saving…' : modal?.mode === 'add' ? 'Save Material' : 'Update Material'}
+            className="gradient-primary mt-6 w-full rounded-lg py-3 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity hover:opacity-90 disabled:opacity-60">
+            {saving ? 'جاري الحفظ...' : modal?.mode === 'add' ? 'حفظ المادة العلمية' : 'تحديث بيانات المادة'}
           </button>
         </div>
       </Modal>
 
       {/* ── View Modal ───────────────────────────────────────────────────── */}
-      <Modal open={!!viewBook} onClose={() => setViewBook(null)} title="Book Details">
+      <Modal open={!!viewBook} onClose={() => setViewBook(null)} title="تفاصيل الكتاب">
         {viewBook && (
-          <div className="space-y-3 text-sm">
+          <div className="space-y-4 text-sm">
             {viewBook.coverImageUrl && (
               <img src={viewBook.coverImageUrl} alt={viewBook.title}
-                className="h-40 w-full rounded-xl object-cover" />
+                className="h-48 w-full rounded-xl object-cover shadow-sm" />
             )}
-            <Row label="Title"       value={viewBook.title} />
-            <Row label="Author"      value={viewBook.author} />
-            <Row label="Category"    value={viewBook.category?.name ?? '—'} />
-            <Row label="Description" value={viewBook.description ?? '—'} />
-            <Row label="Status"      value={viewBook.availabilityStatus} />
-            <Row label="Copies"      value={`${viewBook.availableCopies} / ${viewBook.totalCopies}`} />
-            <Row label="Year"        value={viewBook.publicationYear} />
-            <Row label="Rating"      value={`⭐ ${viewBook.rating ?? 0}`} />
+            
+            <div className="space-y-2 pt-2">
+              <Row label="العنوان"       value={viewBook.title} />
+              <Row label="المؤلف"      value={viewBook.author} />
+              <Row label="القسم"    value={viewBook.category?.name ?? '—'} />
+              <div className="py-2 border-b border-navy/5 text-xs">
+                <span className="block text-navy/50 mb-1">الوصف</span>
+                <p className="text-navy font-medium leading-relaxed">{viewBook.description ?? '—'}</p>
+              </div>
+              <Row label="حالة التوفر"      value={viewBook.availabilityStatus} />
+              <Row label="عدد النسخ"      value={`${viewBook.availableCopies} متوفرة / من أصل ${viewBook.totalCopies}`} />
+              <Row label="سنة النشر"        value={viewBook.publicationYear} />
+              <Row label="التقييم"      value={`⭐ ${viewBook.rating ?? 0}`} />
+            </div>
+
             {viewBook.pdfUrl && viewBook.pdfUrl !== '#' && (
-              <a href={viewBook.pdfUrl} target="_blank" rel="noreferrer"
-                className="gradient-primary block rounded-lg py-2 text-center text-sm font-semibold text-white">
-                View PDF
-              </a>
+              <div className="pt-4">
+                <a href={viewBook.pdfUrl} target="_blank" rel="noreferrer"
+                  className="gradient-primary block rounded-lg py-2.5 text-center text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-md shadow-navy/20">
+                  عرض الكتاب (PDF)
+                </a>
+              </div>
             )}
           </div>
         )}
@@ -349,9 +366,9 @@ function FileInput({ label, accept, file, onChange, hint }) {
   return (
     <div>
       <label className="text-xs font-semibold text-navy/70">{label}</label>
-      <label className="mt-1.5 flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-navy/20 bg-app-bg px-3 py-2.5 text-sm text-navy/50 hover:border-teal hover:text-teal transition-colors">
-        <Upload size={14} />
-        <span className="flex-1 truncate">
+      <label className="mt-1.5 flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-navy/20 bg-app-bg px-3 py-3 text-sm text-navy/50 hover:border-teal hover:text-teal transition-colors">
+        <Upload size={16} className="shrink-0" />
+        <span className="flex-1 truncate text-start">
           {file ? file.name : 'اضغط لاختيار ملف'}
         </span>
         <input
@@ -361,7 +378,7 @@ function FileInput({ label, accept, file, onChange, hint }) {
           onChange={(e) => onChange(e.target.files?.[0] ?? null)}
         />
       </label>
-      {hint && <p className="mt-1 text-xs text-text-hint">{hint}</p>}
+      {hint && <p className="mt-1.5 text-[11px] text-text-hint">{hint}</p>}
     </div>
   );
 }
@@ -370,29 +387,30 @@ function Field({ label, ...props }) {
   return (
     <div>
       <label className="text-xs font-semibold text-navy/70">{label}</label>
-      <input {...props} className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2 text-sm text-navy outline-none focus:border-teal" />
+      <input {...props} className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy outline-none transition-colors focus:border-teal" />
     </div>
   );
 }
 
+// التعديل: ضبط الـ Flexbox عشان يعرض الكلمة وقيمتها صح بالعربي
 function Row({ label, value }) {
   return (
-    <div className="flex justify-between border-b border-navy/5 pb-2">
-      <span className="text-navy/40">{label}</span>
-      <span className="font-semibold text-navy">{value}</span>
+    <div className="flex items-center justify-between gap-2 border-b border-navy/5 pb-2">
+      <span className="shrink-0 text-navy/50">{label}</span>
+      <span className="font-semibold text-navy text-end">{value}</span>
     </div>
   );
 }
 
 function IconBtn({ icon: Icon, tone, onClick, title }) {
   const tones = {
-    blue:  'bg-status-blue-bg text-status-blue hover:bg-status-blue/20',
-    green: 'bg-status-green-bg text-status-green hover:bg-status-green/20',
-    red:   'bg-status-red-bg text-status-red hover:bg-status-red/20',
+    blue:  'bg-status-blue-bg text-status-blue hover:bg-status-blue hover:text-white',
+    green: 'bg-status-green-bg text-status-green hover:bg-status-green hover:text-white',
+    red:   'bg-status-red-bg text-status-red hover:bg-status-red hover:text-white',
   };
   return (
-    <button onClick={onClick} title={title} className={`rounded-lg p-1.5 ${tones[tone]}`}>
-      <Icon size={14} />
+    <button onClick={onClick} title={title} className={`rounded-lg p-1.5 transition-colors ${tones[tone]}`}>
+      <Icon size={15} />
     </button>
   );
 }

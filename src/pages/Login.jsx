@@ -102,38 +102,41 @@ export default function Login() {
       <div className="w-full max-w-sm rounded-2xl bg-auth-card p-8 shadow-xl shadow-navy/10">
 
         <div className="text-center">
-          <h1 className="gradient-text text-2xl font-extrabold">Maktabati</h1>
-          <p className="mt-1 text-xs text-navy/50">Admin Portal</p>
+          {/* التعديل الأول: تعريب العناوين */}
+          <h1 className="gradient-text text-2xl font-extrabold">مكتبتي</h1>
+          <p className="mt-1 text-xs text-navy/50">بوابة الإدارة</p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-7 space-y-4">
           <div>
-            <label className="text-xs font-semibold text-navy/70"> Email</label>
+            <label className="text-xs font-semibold text-navy/70">البريد الإلكتروني</label>
             <input
               type="email"
               required
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="admin@email.com"
-              className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
+              className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-navy/70">Password</label>
+            <label className="text-xs font-semibold text-navy/70">كلمة المرور</label>
             <div className="relative mt-1.5">
               <input
                 type={showPass ? 'text' : 'password'}
                 required
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                placeholder="Enter your password"
-                className="w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 pr-10 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
+                placeholder="أدخل كلمة المرور"
+                // {/* التعديل الثاني: pe-10 بدل pr-10 للـ RTL */}
+                className="w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 pe-10 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowPass((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/40 hover:text-navy/70"
+                // {/* التعديل الثالث: end-3 بدل right-3 للـ RTL */}
+                className="absolute end-3 top-1/2 -translate-y-1/2 text-navy/40 hover:text-navy/70 transition-colors"
               >
                 {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -147,33 +150,33 @@ export default function Login() {
           )}
 
           <div className="flex items-center justify-between text-xs">
-            <label className="flex items-center gap-2 text-navy/60">
+            <label className="flex items-center gap-2 text-navy/60 cursor-pointer">
               <input
                 type="checkbox"
                 checked={form.remember}
                 onChange={(e) => setForm({ ...form, remember: e.target.checked })}
-                className="accent-teal"
+                className="accent-teal cursor-pointer"
               />
-              Remember me
+              تذكرني
             </label>
             <button type="button" onClick={openForgot}
-              className="font-semibold text-teal hover:underline">
-              Forgot password?
+              className="font-semibold text-teal hover:underline transition-all">
+              نسيت كلمة المرور؟
             </button>
           </div>
 
           <button
             type="submit"
-            className="gradient-primary w-full rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity disabled:opacity-60"
+            className="gradient-primary w-full rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity hover:opacity-90 disabled:opacity-60"
           >
-            Sign In
+            تسجيل الدخول
           </button>
         </form>
       </div>
 
       {/* ── Forgot Password Modal ──────────────────────────────────────────── */}
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/30 px-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/30 px-4 backdrop-blur-sm transition-all">
           <div className="w-full max-w-sm rounded-2xl bg-auth-card p-6 shadow-xl shadow-navy/20">
 
             <div className="mb-4 flex items-center justify-between">
@@ -181,27 +184,28 @@ export default function Login() {
                 {modal === STEP_EMAIL ? 'نسيت كلمة المرور؟' : 'إعادة تعيين كلمة المرور'}
               </h2>
               <button onClick={closeModal}
-                className="rounded-lg p-1 text-navy/40 hover:bg-navy/5 hover:text-navy">
+                className="rounded-lg p-1.5 text-navy/40 hover:bg-navy/5 hover:text-navy transition-colors">
                 <X size={16} />
               </button>
             </div>
 
             {fpSuccess && (
-              <p className="mb-3 rounded-lg bg-status-green-bg px-3 py-2 text-xs font-medium text-status-green">
-                {fpSuccess}
+              <p className="mb-4 rounded-lg bg-status-green-bg px-3 py-2 text-xs font-medium text-status-green flex items-start gap-2">
+                <span className="leading-none mt-0.5">✅</span>
+                <span>{fpSuccess}</span>
               </p>
             )}
 
             {fpError && (
-              <p className="mb-3 rounded-lg bg-status-red-bg px-3 py-2 text-xs font-medium text-status-red">
+              <p className="mb-4 rounded-lg bg-status-red-bg px-3 py-2 text-xs font-medium text-status-red">
                 {fpError}
               </p>
             )}
 
             {modal === STEP_EMAIL && (
-              <form onSubmit={handleSendOtp} className="space-y-3">
-                <p className="text-xs text-navy/60">
-                  أدخل بريدك الإلكتروني وسنرسل لك كود التحقق
+              <form onSubmit={handleSendOtp} className="space-y-4">
+                <p className="text-xs text-navy/60 leading-relaxed">
+                  أدخل بريدك الإلكتروني وسنرسل لك كود التحقق لإعادة تعيين كلمة المرور.
                 </p>
                 <div>
                   <label className="text-xs font-semibold text-navy/70">البريد الإلكتروني</label>
@@ -211,13 +215,13 @@ export default function Login() {
                     value={fpEmail}
                     onChange={(e) => setFpEmail(e.target.value)}
                     placeholder="example@email.com"
-                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
+                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal transition-colors"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={fpLoading}
-                  className="gradient-primary w-full rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 disabled:opacity-60"
+                  className="gradient-primary w-full rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity hover:opacity-90 disabled:opacity-60"
                 >
                   {fpLoading ? 'جاري الإرسال...' : 'إرسال كود التحقق'}
                 </button>
@@ -225,9 +229,9 @@ export default function Login() {
             )}
 
             {modal === STEP_RESET && (
-              <form onSubmit={handleResetPassword} className="space-y-3">
+              <form onSubmit={handleResetPassword} className="space-y-4">
                 <p className="text-xs text-navy/60">
-                  أدخل الكود الذي وصلك على <span className="font-semibold text-navy">{fpEmail}</span>
+                  أدخل الكود الذي وصلك على <span className="font-semibold text-teal">{fpEmail}</span>
                 </p>
 
                 <div>
@@ -239,7 +243,7 @@ export default function Login() {
                     onChange={(e) => setFpOtp(e.target.value)}
                     placeholder="123456"
                     maxLength={6}
-                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal tracking-widest text-center"
+                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal tracking-widest text-center transition-colors"
                   />
                 </div>
 
@@ -251,7 +255,7 @@ export default function Login() {
                     value={fpNewPass}
                     onChange={(e) => setFpNewPass(e.target.value)}
                     placeholder="6 أحرف على الأقل"
-                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
+                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal transition-colors"
                   />
                 </div>
 
@@ -263,22 +267,22 @@ export default function Login() {
                     value={fpConfirm}
                     onChange={(e) => setFpConfirm(e.target.value)}
                     placeholder="أعد كتابة كلمة المرور"
-                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal"
+                    className="mt-1.5 w-full rounded-lg border border-navy/10 bg-card px-3 py-2.5 text-sm text-navy placeholder:text-text-hint outline-none focus:border-teal transition-colors"
                   />
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => { setModal(STEP_EMAIL); setFpError(''); setFpSuccess(''); }}
-                    className="flex-1 rounded-lg border border-navy/10 py-2.5 text-xs font-semibold text-navy/60 hover:bg-navy/5"
+                    className="flex-1 rounded-lg border border-navy/10 bg-navy/5 py-2.5 text-xs font-semibold text-navy/60 hover:bg-navy/10 transition-colors"
                   >
                     رجوع
                   </button>
                   <button
                     type="submit"
                     disabled={fpLoading}
-                    className="gradient-primary flex-1 rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 disabled:opacity-60"
+                    className="gradient-primary flex-1 rounded-lg py-2.5 text-sm font-semibold text-white shadow-md shadow-navy/20 transition-opacity hover:opacity-90 disabled:opacity-60"
                   >
                     {fpLoading ? 'جاري الحفظ...' : 'تغيير كلمة المرور'}
                   </button>
@@ -288,7 +292,7 @@ export default function Login() {
                   type="button"
                   onClick={handleSendOtp}
                   disabled={fpLoading}
-                  className="w-full text-center text-xs text-teal hover:underline disabled:opacity-50"
+                  className="mt-2 w-full text-center text-xs text-teal hover:underline disabled:opacity-50 transition-all"
                 >
                   لم يصلك الكود؟ إعادة إرسال
                 </button>

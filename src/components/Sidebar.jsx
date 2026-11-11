@@ -6,34 +6,39 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 const BASE_NAV = [
-  { to: '/',                    label: 'Dashboard',           icon: LayoutDashboard },
-  { to: '/materials',           label: 'Material Management', icon: Library },
-  { to: '/categories',          label: 'Categories',          icon: FolderOpen },
-  { to: '/exams',               label: 'Exam Archive',        icon: FileText },
-  { to: '/graduation-projects', label: 'Graduation Projects', icon: GraduationCap },
+  { to: '/',                    label: 'لوحة التحكم',       icon: LayoutDashboard },
+  { to: '/materials',           label: 'إدارة المواد',      icon: Library },
+  { to: '/categories',          label: 'الأقسام',           icon: FolderOpen },
+  { to: '/exams',               label: 'أرشيف الامتحانات',  icon: FileText },
+  { to: '/graduation-projects', label: 'مشاريع التخرج',     icon: GraduationCap },
 ];
 
 const SUPER_ADMIN_NAV = [
-  { to: '/create-admin', label: 'Create Admin', icon: UserPlus },
+  { to: '/create-admin', label: 'إنشاء حساب Admin', icon: UserPlus },
 ];
 
 export default function Sidebar({ open, onClose }) {
   const { isSuperAdmin } = useAuth();
   const NAV_ITEMS = isSuperAdmin ? [...BASE_NAV, ...SUPER_ADMIN_NAV] : BASE_NAV;
 
-  const sidebarClasses = `fixed inset-y-0 left-0 z-50 w-72 max-w-full transform overflow-x-hidden overflow-y-auto bg-navy px-4 py-6 transition-transform duration-200 sm:relative sm:translate-x-0 sm:w-64 ${open ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'}`;
+  // التعديل الأول: استبدال sm بـ lg هنا
+  const sidebarClasses = `fixed inset-y-0 start-0 z-50 w-72 max-w-full transform overflow-x-hidden overflow-y-auto bg-navy px-4 py-6 transition-transform duration-200 lg:relative lg:translate-x-0 lg:w-64 ${
+    open ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
+  }`;
 
   return (
     <aside className={sidebarClasses}>
-      <div className="flex items-center justify-between px-2 pb-6 sm:justify-start">
+      {/* التعديل الثاني: استبدال sm بـ lg في justify-start */}
+      <div className="flex items-center justify-between px-2 pb-6 lg:justify-start">
         <div>
-          <p className="text-xl font-extrabold text-white">Maktabti</p>
-          <p className="text-xs font-medium text-white/40">Admin Portal</p>
+          <p className="text-xl font-extrabold text-white">مكتبتي</p>
+          <p className="text-xs font-medium text-white/40">لوحة الإدارة</p>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-xl bg-white/10 p-2 text-white/80 transition hover:bg-white/20 sm:hidden"
+          // {/* التعديل الثالث: استبدال sm بـ lg لإخفاء الزرار في الشاشات الكبيرة فقط */}
+          className="rounded-xl bg-white/10 p-2 text-white/80 transition hover:bg-white/20 lg:hidden"
         >
           <X size={16} />
         </button>

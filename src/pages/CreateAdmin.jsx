@@ -53,9 +53,7 @@ export default function CreateAdmin() {
 
     setLoading(true);
 
-    // محاكاة إرسال البيانات للسيرفر
     setTimeout(() => {
-      // تجربة وهمية لحالة الإيرور
       if (form.universityEmail === 'admin@admin.com') {
         setApiError('هذا البريد مسجل بالفعل (تجربة للخطأ)');
         setLoading(false);
@@ -72,10 +70,11 @@ export default function CreateAdmin() {
   };
 
   return (
-    <div>
+    // التعديل الأول: إضافة padding للحاوية الرئيسية عشان نبعد العنوان والمحتوى عن القائمة الجانبية
+    <div className="p-4 sm:p-6 lg:p-8 w-full">
       <Topbar title="إنشاء حساب Admin" />
 
-      <div className="mx-auto mt-6 max-w-lg rounded-2xl bg-card p-8 shadow-sm">
+      <div className="mx-auto mt-6 max-w-lg rounded-2xl bg-card p-6 sm:p-8 shadow-sm">
 
         <h2 className="mb-1 text-base font-semibold text-navy">إنشاء حساب Admin جديد</h2>
         <p className="mb-6 text-xs text-text-hint">
@@ -83,7 +82,7 @@ export default function CreateAdmin() {
         </p>
 
         {success && (
-          <div className="mb-4 rounded-lg bg-status-green-bg px-4 py-3 text-xs font-medium text-status-green">
+          <div className="mb-4 rounded-lg bg-status-green-bg px-4 py-3 text-xs font-medium text-status-green flex items-start gap-2">
             {success}
           </div>
         )}
@@ -163,11 +162,20 @@ export default function CreateAdmin() {
             )}
           </div>
 
-          {/* Info box */}
-          <div className="rounded-lg bg-status-blue-bg px-4 py-3 text-xs text-status-blue space-y-1">
-            <p>✅ سيتم إنشاء كلمة مرور عشوائية قوية تلقائياً</p>
-            <p>✅ سيتم إرسال بيانات الدخول للبريد الإلكتروني</p>
-            <p>✅ Admin الجديد سيضطر لتغيير الكلمة عند أول دخول</p>
+          {/* التعديل الثاني: استخدام Flexbox لصندوق المعلومات لضمان محاذاة الأيقونات بشكل مثالي */}
+          <div className="space-y-2 rounded-lg bg-status-blue-bg px-4 py-3 text-xs font-medium text-status-blue">
+            <div className="flex items-start gap-2">
+              <span className="leading-none mt-0.5">✅</span>
+              <span>سيتم إنشاء كلمة مرور عشوائية قوية تلقائياً</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="leading-none mt-0.5">✅</span>
+              <span>سيتم إرسال بيانات الدخول للبريد الإلكتروني</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="leading-none mt-0.5">✅</span>
+              <span>Admin الجديد سيضطر لتغيير الكلمة عند أول دخول</span>
+            </div>
           </div>
 
           <button
